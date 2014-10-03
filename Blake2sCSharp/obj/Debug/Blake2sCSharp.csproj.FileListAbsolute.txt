@@ -1,0 +1,4 @@
+C:\Users\dustin.sparks\Documents\Visual Studio 2012\Projects\miniLockManaged\Blake2sCSharp\bin\Debug\Blake2sCSharp.dll
+C:\Users\dustin.sparks\Documents\Visual Studio 2012\Projects\miniLockManaged\Blake2sCSharp\bin\Debug\Blake2sCSharp.pdb
+C:\Users\dustin.sparks\Documents\Visual Studio 2012\Projects\miniLockManaged\Blake2sCSharp\obj\Debug\Blake2sCSharp.dll
+C:\Users\dustin.sparks\Documents\Visual Studio 2012\Projects\miniLockManaged\Blake2sCSharp\obj\Debug\Blake2sCSharp.pdb

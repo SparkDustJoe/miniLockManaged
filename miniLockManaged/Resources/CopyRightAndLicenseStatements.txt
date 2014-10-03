@@ -1,0 +1,180 @@
+===================================================================================================
+
+miniLockManaged C# Library (and example tester) for the "miniLock Protocol"
+Copyright 2014 Dustin Sparks (@SparkDustJoe)
+
+Where not directly linked from a supporting DLL (see below for sources) or ported from another 
+library (such as the Blake2s construction), all code written by Dustin Sparks, per the original
+miniLock specification by Nadim Kobeissi.
+
+Public Domain (where applicable, see copyright statements for each source)
+
+===================================================================================================
+
+miniLock (source JavaScript code used as reference and inspiration for this work, but not 
+           directly incorporated into this work)
+
+(license from GIT repository)
+GNU AFFERO GENERAL PUBLIC LICENSE
+Version 3, 19 November 2007
+
+from Readme Document
+"[9. Thanks]
+
+Sincere thanks are presented to Dr. Matthew D. Green and Meredith L. Patterson, who gave feedback
+ on an early draft of this document.
+
+Sincere thanks are presented to Trevor Perrin for his invaluable contribution to miniLock's design,
+ which introduced sender ID anonymity in the ciphertext.
+
+Sincere thanks are presented to Dmitry Chestnykh for his work on porting TweetNaCL to JavaScript
+ and his general cooperation with the miniLock project, including many helpful and crucial
+ suggestions.
+
+Sincere thanks are presented to Dr. Mario Heiderich and his team at Cure53 for their work on
+ performing a full audit of the miniLock codebase. We also sincerely thank the Open Technology
+ Fund for funding the audit.
+
+Finally, sincere thanks are presented to the wonderful, constructive members of the miniLock
+ community who have contributed many improvements and ideas to the miniLock design and codebase.
+ You rock!
+
+ [10. Credits]
+miniLock
+
+Copyright 2014 Nadim Kobeissi. Released under the AGPLv3 license.
+
+TweetNaCL
+Daniel J. Bernstein, Wesley Janssen, Tanja Lange, Peter Schwabe, Matthew Dempsky
+
+TweetNaCL-JS
+Dmitry Chestnykh, Devi Mandiri
+
+scrypt
+Colin Percival"
+
+Blake2s.js (from miniLock source, not used in miniLock Clone)
+Dmitry Chestnykh
+
+===================================================================================================
+
+ZXCVBN.js (as well as ZXCVBN-CS as ported by Michael Ford https://github.com/mickford/zxcvbn-cs)
+(compiled DLL from GITHUB repository source, linked)
+
+https://github.com/dropbox/zxcvbn/blob/master/LICENSE.txt - Dan Wheeler
+
+Copyright (c) 2012 Dropbox, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+===================================================================================================
+
+Blake2s (adapted from original source C# code found at http://blake2.net)
+
+// Originally Written in 2012 by Christian Winnerlein  <codesinchaos@gmail.com>
+// Rewritten Fall 2014 (for the Blake2s flavor instead of the Blake2b flavor)
+//   by Dustin Sparks <sparkdustjoe@gmail.com>
+
+// To the extent possible under law, the author(s) have dedicated all copyright
+// and related and neighboring rights to this software to the public domain
+// worldwide. This software is distributed without any warranty.
+
+// You should have received a copy of the CC0 Public Domain Dedication along with
+// this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+/*
+  Based on BlakeSharp
+  by Dominik Reichl <dominik.reichl@t-online.de>
+  Web: http://www.dominik-reichl.de/
+  If you're using this class, it would be nice if you'd mention
+  me somewhere in the documentation of your program, but it's
+  not required.
+
+  BLAKE was designed by Jean-Philippe Aumasson, Luca Henzen,
+  Willi Meier and Raphael C.-W. Phan.
+  BlakeSharp was derived from the reference C implementation.
+*/
+
+===================================================================================================
+
+Chaos.NaCl (linked DLL from GITHUB repository, https://github.com/CodesInChaos/Chaos.NaCl.git)
+
+Public domain
+
+C# port + code by Christian Winnerlein (CodesInChaos)
+
+Poly1305 in c
+        written by Andrew M. (floodyberry)
+        original license: MIT or PUBLIC DOMAIN
+        https://github.com/floodyberry/poly1305-donna/blob/master/poly1305-donna-unrolled.c
+
+Curve25519 and Ed25519 in c
+        written by Dan Bernstein (djb)
+        public domain
+        from Ref10 in SUPERCOP http://bench.cr.yp.to/supercop.html
+
+(H)Salsa20 in c
+        written by Dan Bernstein (djb)
+        public domain
+        from SUPERCOP http://bench.cr.yp.to/supercop.html
+
+SHA512
+        written by Christian Winnerlein (CodesInChaos)
+        public domain
+        directly from the specification
+
+===================================================================================================
+
+Newtonsoft.Json 6.0.5 (linked DLL, Visual Studio 2012 NUGET Package)
+The MIT License (MIT)
+Copyright (c) 2007 James Newton-King
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+===================================================================================================
+
+CryptSharp 2.0.0.2 (linked DLL, Visual Studio 2012 NUGET Package)
+Copyright (c) 2011, 2013 James F. Bellinger <http://www.zer7.com/software/cryptsharp>
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted, provided that the above
+copyright notice and this permission notice appear in all copies.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.

@@ -1,0 +1,663 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Zxcvbn</name>
+    </assembly>
+    <members>
+        <member name="T:Zxcvbn.DefaultMatcherFactory">
+            <summary>
+            <para>This matcher factory will use all of the default password matchers.</para>
+            
+            <para>Default dictionary matchers use the built-in word lists: passwords, english, male_names, female_names, surnames</para>
+            <para>Also matching against: user data, all dictionaries with l33t substitutions</para>
+            <para>Other default matchers: repeats, sequences, digits, years, dates, spatial</para>
+            
+            <para>See <see cref="T:Zxcvbn.Matcher.IMatcher"/> and the classes that implement it for more information on each kind of pattern matcher.</para>
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.IMatcherFactory">
+            <summary>
+            Interface that matcher factories must implement. Matcher factories return a list of the matchers
+            that will be used to evaluate the password
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.IMatcherFactory.CreateMatchers(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            <para>Create the matchers to be used by an instance of Zxcvbn. </para>
+            
+            <para>This function will be called once per each password being evaluated, to give the opportunity to provide
+            different user inputs for each password. Matchers that are not dependent on user inputs should ideally be created
+            once and cached so that processing (e.g. dictionary loading) will only have to be performed once, these cached
+            matchers plus any user input matches would then be returned when CreateMatchers is called.</para>
+            </summary>
+            <param name="userInputs">List of per-password user information for this invocation</param>
+            <returns>An enumerable of <see cref="T:Zxcvbn.Matcher.IMatcher"/> objects that will be used to pattern match this password</returns>
+        </member>
+        <member name="M:Zxcvbn.DefaultMatcherFactory.#ctor">
+            <summary>
+            Create a matcher factory that uses the default list of pattern matchers
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.DefaultMatcherFactory.CreateMatchers(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Get instances of pattern matchers, adding in per-password matchers on userInputs (and userInputs with l33t substitutions)
+            </summary>
+            <param name="userInputs">Enumerable of user information</param>
+            <returns>Enumerable of matchers to use</returns>
+        </member>
+        <member name="T:Zxcvbn.LinqExtensions">
+            <summary>
+            Useful shared Linq extensions
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.LinqExtensions.GroupAdjacent``2(System.Collections.Generic.IEnumerable{``1},System.Func{``1,``0})">
+            <summary>
+            Used to group elements by a key function, but only where elements are adjacent
+            </summary>
+            <param name="keySelector">Function used to choose the key for grouping</param>
+            <param name="source">THe enumerable being grouped</param>
+            <returns>An enumerable of <see cref="T:Zxcvbn.LinqExtensions.AdjacentGrouping`2"/> </returns>
+            <typeparam name="TKey">Type of key value used for grouping</typeparam>
+            <typeparam name="TSource">Type of elements that are grouped</typeparam>
+        </member>
+        <member name="T:Zxcvbn.LinqExtensions.AdjacentGrouping`2">
+            <summary>
+            A single grouping from the GroupAdjacent function, includes start and end indexes for the grouping in addition to standard IGrouping bits
+            </summary>
+            <typeparam name="TElement">Type of grouped elements</typeparam>
+            <typeparam name="TKey">Type of key used for grouping</typeparam>
+        </member>
+        <member name="P:Zxcvbn.LinqExtensions.AdjacentGrouping`2.Key">
+            <summary>
+            The key value for this grouping
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.LinqExtensions.AdjacentGrouping`2.StartIndex">
+            <summary>
+            The start index in the source enumerable for this group (i.e. index of first element)
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.LinqExtensions.AdjacentGrouping`2.EndIndex">
+            <summary>
+            The end index in the enumerable for this group (i.e. the index of the last element)
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.DateMatcher">
+            <summary>
+            <para>This matcher attempts to guess dates, with and without date separators. e.g. 1197 (could be 1/1/97) through to 18/12/2015.</para>
+            
+            <para>The format for matching dates is quite particular, and only detected years in the range 00-99 and 1900-2019 are considered by
+            this matcher.</para>
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.IMatcher">
+            <summary>
+            All pattern matchers must implement the IMatcher interface.
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.IMatcher.MatchPassword(System.String)">
+            <summary>
+            This function is called once for each matcher for each password being evaluated. It should perform the matching process and return
+            an enumerable of Match objects for each match found.
+            </summary>
+            <param name="password"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DateMatcher.MatchPassword(System.String)">
+            <summary>
+            Find date matches in <paramref name="password"/>
+            </summary>
+            <param name="password">The passsord to check</param>
+            <returns>An enumerable of date matches</returns>
+            <seealso cref="T:Zxcvbn.Matcher.DateMatch"/>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DateMatcher.IsDate(System.String)">
+            <summary>
+            Determine whether a string resembles a date (year first or year last)
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DateMatcher.IsDayMonthString(System.String)">
+            <summary>
+            Determines whether a substring of a date string resembles a day and month (day-month or month-day)
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.DateMatch">
+            <summary>
+            A match found by the date matcher
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Match">
+            <summary>
+            <para>A single match that one of the pattern matchers has made against the password being tested.</para>
+            
+            <para>Some pattern matchers implement subclasses of match that can provide more information on their specific results.</para>
+            
+            <para>Matches must all have the <see cref="P:Zxcvbn.Match.Pattern"/>, <see cref="P:Zxcvbn.Match.Token"/>, <see cref="P:Zxcvbn.Match.Entropy"/>, <see cref="P:Zxcvbn.Match.i"/> and
+            <see cref="P:Zxcvbn.Match.j"/> fields (i.e. all but the <see cref="P:Zxcvbn.Match.Cardinality"/> field, which is optional) set before being returned from the matcher
+            in which they are created.</para>
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.Pattern">
+            <summary>
+            The name of the pattern matcher used to generate this match
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.Token">
+            <summary>
+            The portion of the password that was matched
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.Entropy">
+            <summary>
+            The entropy that this portion of the password covers using the current pattern matching technique
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.Cardinality">
+            <summary>
+            Some pattern matchers can associate the cardinality of the set of possible matches that the 
+            entropy calculation is derived from. Not all matchers provide a value for cardinality.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.i">
+            <summary>
+            The start index in the password string of the matched token. 
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Match.j">
+            <summary>
+            The end index in the password string of the matched token.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DateMatch.Year">
+            <summary>
+            The detected year
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DateMatch.Month">
+            <summary>
+            The detected month
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DateMatch.Day">
+            <summary>
+            The detected day
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DateMatch.Separator">
+            <summary>
+            Where a date with separators is matched, this will contain the separator that was used (e.g. '/', '-')
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.DictionaryMatcher">
+            <summary>
+            <para>This matcher reads in a list of words (in frequency order) and matches substrings of the password against that dictionary.</para>
+            
+            <para>The dictionary to be used can be specified directly by passing an enumerable of strings through the constructor (e.g. for
+            matching agains user inputs). Most dictionaries will be in word list files.</para>
+            
+            <para>Using external files is a departure from the JS version of Zxcvbn which bakes in the word lists, so the default dictionaries
+            have been included in the Zxcvbn assembly as embedded resources (to remove the external dependency). Thus when a word list is specified
+            by name, it is first checked to see if it matches and embedded resource and if not is assumed to be an external file. </para>
+            
+            <para>Thus custom dictionaries can be included by providing the name of an external text file, but the built-in dictionaries (english.lst,
+            female_names.lst, male_names.lst, passwords.lst, surnames.lst) can be used without concern about locating a dictionary file in an accessible
+            place.</para>
+            
+            <para>Dictionary word lists must be in decreasing frequency order and contain one word per line with no additional information.</para>
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DictionaryMatcher.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new dictionary matcher. <paramref name="wordListPath"/> must be the path (relative or absolute) to a file containing one word per line,
+            entirely in lowercase, ordered by frequency (decreasing); or <paramref name="wordListPath"/> must be the name of a built-in dictionary.
+            </summary>
+            <param name="name">The name provided to the dictionary used</param>
+            <param name="wordListPath">The filename of the dictionary (full or relative path) or name of built-in dictionary</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DictionaryMatcher.#ctor(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new dictionary matcher from the passed in word list. If there is any frequency order then they should be in
+            decreasing frequency order.
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.DictionaryMatcher.MatchPassword(System.String)">
+            <summary>
+            Match substrings of password agains the loaded dictionary
+            </summary>
+            <param name="password">The password to match</param>
+            <returns>An enumerable of dictionary matches</returns>
+            <seealso cref="T:Zxcvbn.Matcher.DictionaryMatch"/>
+        </member>
+        <member name="T:Zxcvbn.Matcher.DictionaryMatch">
+            <summary>
+            Matches found by the dictionary matcher contain some additional information about the matched word.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DictionaryMatch.MatchedWord">
+            <summary>
+            The dictionary word matched
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DictionaryMatch.Rank">
+            <summary>
+            The rank of the matched word in the dictionary (i.e. 1 is most frequent, and larger numbers are less common words)
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DictionaryMatch.DictionaryName">
+            <summary>
+            The name of the dictionary the matched word was found in
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DictionaryMatch.BaseEntropy">
+            <summary>
+            The base entropy of the match, calculated from frequency rank
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.DictionaryMatch.UppercaseEntropy">
+            <summary>
+            Additional entropy for this match from the use of mixed case
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.L33tMatcher">
+            <summary>
+            This matcher applies some known l33t character substitutions and then attempts to match against passed in dictionary matchers.
+            This detects passwords like 4pple which has a '4' substituted for an 'a'
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.L33tMatcher.#ctor(System.Collections.Generic.List{Zxcvbn.Matcher.DictionaryMatcher})">
+            <summary>
+            Create a l33t matcher that applies substitutions and then matches agains the passed in list of dictionary matchers.
+            </summary>
+            <param name="dictionaryMatchers">The list of dictionary matchers to check transformed passwords against</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.L33tMatcher.#ctor(Zxcvbn.Matcher.DictionaryMatcher)">
+            <summary>
+            Create a l33t matcher that applies substitutions and then matches agains a single dictionary matcher.
+            </summary>
+            <param name="dictionaryMatcher">The dictionary matcher to check transformed passwords against</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.L33tMatcher.MatchPassword(System.String)">
+            <summary>
+            Apply applicable l33t transformations and check <paramref name="password"/> against the dictionaries. 
+            </summary>
+            <param name="password">The password to check</param>
+            <returns>A list of match objects where l33t substitutions match dictionary words</returns>
+            <seealso cref="T:Zxcvbn.Matcher.L33tDictionaryMatch"/>
+        </member>
+        <member name="T:Zxcvbn.Matcher.L33tDictionaryMatch">
+            <summary>
+            L33tMatcher results are like dictionary match results with some extra information that pertains to the extra entropy that
+            is garnered by using substitutions.
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.L33tDictionaryMatch.#ctor(Zxcvbn.Matcher.DictionaryMatch)">
+            <summary>
+            Create a new l33t match from a dictionary match
+            </summary>
+            <param name="dm">The dictionary match to initialise the l33t match from</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.L33tDictionaryMatch.#ctor">
+            <summary>
+            Create an empty l33t match
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.L33tDictionaryMatch.L33tEntropy">
+            <summary>
+            The extra entropy from using l33t substitutions
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.L33tDictionaryMatch.Subs">
+            <summary>
+            The character mappings that are in use for this match
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.RegexMatcher">
+            <summary>
+            <para>Use a regular expression to match agains the password. (e.g. 'year' and 'digits' pattern matchers are implemented with this matcher.</para>
+            <para>A note about cardinality: the cardinality parameter is used to calculate the entropy of matches found with the regex matcher. Since
+            this cannot be calculated automatically from the regex pattern it must be provided. It can be provided per-character or per-match. Per-match will
+            result in every match having the same entropy (lg cardinality) whereas per-character will depend on the match length (lg cardinality ^ length)</para>
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.RegexMatcher.#ctor(System.String,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Create a new regex pattern matcher
+            </summary>
+            <param name="pattern">The regex pattern to match</param>
+            <param name="cardinality">The cardinality of this match. Since this cannot be calculated from a pattern it must be provided. Can
+            be give per-matched-character or per-match</param>
+            <param name="perCharCardinality">True if cardinality is given as per-matched-character</param>
+            <param name="matcherName">The name to give this matcher ('pattern' in resulting matches)</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.RegexMatcher.#ctor(System.Text.RegularExpressions.Regex,System.Int32,System.Boolean,System.String)">
+            <summary>
+            Create a new regex pattern matcher
+            </summary>
+            <param name="matchRegex">The regex object used to perform matching</param>
+            <param name="cardinality">The cardinality of this match. Since this cannot be calculated from a pattern it must be provided. Can
+            be give per-matched-character or per-match</param>
+            <param name="perCharCardinality">True if cardinality is given as per-matched-character</param>
+            <param name="matcherName">The name to give this matcher ('pattern' in resulting matches)</param>
+        </member>
+        <member name="M:Zxcvbn.Matcher.RegexMatcher.MatchPassword(System.String)">
+            <summary>
+            Find all matches of the regex in <paramref name="password"/>
+            </summary>
+            <param name="password">The password to check</param>
+            <returns>An enumerable of matches for each regex match in <paramref name="password"/></returns>
+        </member>
+        <member name="T:Zxcvbn.Matcher.RepeatMatcher">
+            <summary>
+            Match repeated characters in the password (repeats must be more than two characters long to count)
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.RepeatMatcher.MatchPassword(System.String)">
+            <summary>
+            Find repeat matches in <paramref name="password"/>
+            </summary>
+            <param name="password">The password to check</param>
+            <returns>List of repeat matches</returns>
+            <seealso cref="T:Zxcvbn.Matcher.RepeatMatch"/>
+        </member>
+        <member name="T:Zxcvbn.Matcher.RepeatMatch">
+            <summary>
+            A match found with the RepeatMatcher
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.RepeatMatch.RepeatChar">
+            <summary>
+            The character that was repeated
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.SequenceMatcher">
+            <summary>
+            This matcher detects lexicographical sequences (and in reverse) e.g. abcd, 4567, PONML etc.
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SequenceMatcher.MatchPassword(System.String)">
+            <summary>
+            Find matching sequences in <paramref name="password"/>
+            </summary>
+            <param name="password">The password to check</param>
+            <returns>Enumerable of sqeunec matches</returns>
+            <seealso cref="T:Zxcvbn.Matcher.SequenceMatch"/>
+        </member>
+        <member name="T:Zxcvbn.Matcher.SequenceMatch">
+            <summary>
+            A match made using the <see cref="T:Zxcvbn.Matcher.SequenceMatcher"/> containing some additional sequence information.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SequenceMatch.SequenceName">
+            <summary>
+            The name of the sequence that the match was found in (e.g. 'lower', 'upper', 'digits')
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SequenceMatch.SequenceSize">
+            <summary>
+            The size of the sequence the match was found in (e.g. 26 for lowercase letters)
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SequenceMatch.Ascending">
+            <summary>
+            Whether the match was found in ascending order (cdefg) or not (zyxw)
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.SpatialMatcher">
+            <summary>
+            <para>A matcher that checks for keyboard layout patterns (e.g. 78523 on a keypad, or plkmn on a QWERTY keyboard).</para>
+            <para>Has patterns for QWERTY, DVORAK, numeric keybad and mac numeric keypad</para>
+            <para>The matcher accounts for shifted characters (e.g. qwErt or po9*7y) when detecting patterns as well as multiple changes in direction.</para>
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SpatialMatcher.MatchPassword(System.String)">
+            <summary>
+            Match the password against the known keyboard layouts
+            </summary>
+            <param name="password">Password to match</param>
+            <returns>List of matching patterns</returns>
+            <seealso cref="M:Zxcvbn.Matcher.SpatialMatcher.SpatialMatch(Zxcvbn.Matcher.SpatialMatcher.SpatialGraph,System.String)"/>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SpatialMatcher.SpatialMatch(Zxcvbn.Matcher.SpatialMatcher.SpatialGraph,System.String)">
+            <summary>
+            Match the password against a single pattern
+            </summary>
+            <param name="graph">Adjacency graph for this key layout</param>
+            <param name="password">Password to match</param>
+            <returns>List of matching patterns</returns>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SpatialMatcher.SpatialGraph.IsCharAdjacent(System.Char,System.Char)">
+            <summary>
+            Returns true when testAdjacent is in c's adjacency list
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SpatialMatcher.SpatialGraph.GetAdjacentCharDirection(System.Char,System.Char,System.Boolean@)">
+            <summary>
+            Returns the 'direction' of the adjacent character (i.e. index in the adjacency list).
+            If the character is not adjacent, -1 is returned
+            
+            Uses the 'shifted' out parameter to let the caller know if the matched character is shifted
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Matcher.SpatialMatcher.SpatialGraph.CalculateEntropy(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Calculate entropy for a math that was found on this adjacency graph
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Matcher.SpatialMatch">
+            <summary>
+            A match made with the <see cref="T:Zxcvbn.Matcher.SpatialMatcher"/>. Contains additional information specific to spatial matches.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SpatialMatch.Graph">
+            <summary>
+            The name of the keyboard layout used to make the spatial match
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SpatialMatch.Turns">
+            <summary>
+            The number of turns made (i.e. when diretion of adjacent keys changes)
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Matcher.SpatialMatch.ShiftedCount">
+            <summary>
+            The number of shifted characters matched in the pattern (adds to entropy)
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.PasswordScoring">
+            <summary>
+            Some useful shared functions used for evaluating passwords
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.PasswordScoring.PasswordCardinality(System.String)">
+            <summary>
+            Calculate the cardinality of the minimal character sets necessary to brute force the password (roughly)
+            (e.g. lowercase = 26, numbers = 10, lowercase + numbers = 36)
+            </summary>
+            <param name="password">THe password to evaluate</param>
+            <returns>An estimation of the cardinality of charactes for this password</returns>
+        </member>
+        <member name="M:Zxcvbn.PasswordScoring.EntropyToCrackTime(System.Double)">
+            <summary>
+            Calculate a rough estimate of crack time for entropy, see zxcbn scoring.coffee for more information on the model used
+            </summary>
+            <param name="entropy">Entropy of password</param>
+            <returns>An estimation of seconts taken to crack password</returns>
+        </member>
+        <member name="M:Zxcvbn.PasswordScoring.CrackTimeToScore(System.Double)">
+            <summary>
+            Return a score for password strength from the crack time. Scores are 0..4, 0 being minimum and 4 maximum strength.
+            </summary>
+            <param name="crackTimeSeconds">Number of seconds estimated for password cracking</param>
+            <returns>Password strength. 0 to 4, 0 is minimum</returns>
+        </member>
+        <member name="M:Zxcvbn.PasswordScoring.Binomial(System.Int32,System.Int32)">
+            <summary>
+            Caclulate binomial coefficient (i.e. nCk)
+            Uses same algorithm as zxcvbn (cf. scoring.coffee), from http://blog.plover.com/math/choose.html 
+            </summary>
+            <param name="k">k</param>
+            <param name="n">n</param>
+            <returns>Binomial coefficient; nCk</returns>
+        </member>
+        <member name="M:Zxcvbn.PasswordScoring.CalculateUppercaseEntropy(System.String)">
+            <summary>
+            Estimate the extra entropy in a token that comes from mixing upper and lowercase letters.
+            This has been moved to a static function so that it can be used in multiple entropy calculations.
+            </summary>
+            <param name="word">The word to calculate uppercase entropy for</param>
+            <returns>An estimation of the entropy gained from casing in <paramref name="word"/></returns>
+        </member>
+        <member name="T:Zxcvbn.Result">
+            <summary>
+            The results of zxcvbn's password analysis
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.Entropy">
+            <summary>
+            A calculated estimate of how many bits of entropy the password covers, rounded to three decimal places.
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.CalcTime">
+            <summary>
+            The number of milliseconds that zxcvbn took to calculate results for this password
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.CrackTime">
+            <summary>
+            An estimation of the crack time for this password in seconds
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.CrackTimeDisplay">
+            <summary>
+            A friendly string for the crack time (like "centuries", "instant", "7 minutes", "14 hours" etc.)
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.Score">
+            <summary>
+            A score from 0 to 4 (inclusive), with 0 being least secure and 4 being most secure calculated from crack time:
+            [0,1,2,3,4] if crack time is less than [10**2, 10**4, 10**6, 10**8, Infinity] seconds.
+            Useful for implementing a strength meter
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.MatchSequence">
+            <summary>
+            The sequence of matches that were used to create the entropy calculation
+            </summary>
+        </member>
+        <member name="P:Zxcvbn.Result.Password">
+            <summary>
+            The password that was used to generate these results
+            </summary>
+        </member>
+        <member name="T:Zxcvbn.Utility">
+            <summary>
+            A few useful extension methods used through the Zxcvbn project
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Utility.DisplayTime(System.Double)">
+            <summary>
+            Convert a number of seconds into a human readable form. Rounds up.
+            To be consistent with zxcvbn, it returns the unit + 1 (i.e. 60 * 10 seconds = 10 minutes would come out as "11 minutes"
+            this is probably to avoid ever needing to deal with plurals
+            </summary>
+            <param name="seconds">The time in seconds</param>
+            <returns>A human-friendly time string</returns>
+        </member>
+        <member name="M:Zxcvbn.Utility.F(System.String,System.Object[])">
+            <summary>
+            Shortcut for string.Format
+            </summary>
+            <param name="args">Format args</param>
+            <param name="str">Format string</param>
+            <returns>Formatted string</returns>
+        </member>
+        <member name="M:Zxcvbn.Utility.StringReverse(System.String)">
+            <summary>
+            Reverse a string in one call
+            </summary>
+            <param name="str">String to reverse</param>
+            <returns>String in reverse</returns>
+        </member>
+        <member name="M:Zxcvbn.Utility.IntParseSubstring(System.String,System.Int32,System.Int32,System.Int32@)">
+            <summary>
+            A convenience for parsing a substring as an int and returning the results. Uses TryParse, and so returns zero where there is no valid int
+            </summary>
+            <param name="r">Substring parsed as int or zero</param>
+            <param name="length">Length of substring to parse</param>
+            <param name="startIndex">Start index of substring to parse</param>
+            <param name="str">String to get substring of</param>
+            <returns>True if the parse succeeds</returns>
+        </member>
+        <member name="M:Zxcvbn.Utility.ToInt(System.String)">
+            <summary>
+            Quickly convert a string to an integer, uses TryParse so any non-integers will return zero
+            </summary>
+            <param name="str">String to parse into an int</param>
+            <returns>Parsed int or zero</returns>
+        </member>
+        <member name="M:Zxcvbn.Utility.GetEmbeddedResourceLines(System.String)">
+            <summary>
+            Returns a list of the lines of text from an embedded resource in the assembly.
+            </summary>
+            <param name="resourceName">The name of the resource to get the contents of</param>
+            <returns>An enumerable of lines of text in the resource or null if the resource does not exist</returns>
+        </member>
+        <member name="T:Zxcvbn.Zxcvbn">
+            <summary>
+            <para>Zxcvbn is used to estimate the strength of passwords. </para>
+            
+            <para>This implementation is a port of the Zxcvbn JavaScript library by Dan Wheeler:
+            https://github.com/lowe/zxcvbn</para>
+            
+            <para>To quickly evaluate a password, use the <see cref="M:Zxcvbn.Zxcvbn.MatchPassword(System.String,System.Collections.Generic.IEnumerable{System.String})"/> static function.</para>
+            
+            <para>To evaluate a number of passwords, create an instance of this object and repeatedly call the <see cref="M:Zxcvbn.Zxcvbn.EvaluatePassword(System.String,System.Collections.Generic.IEnumerable{System.String})"/> function.
+            Reusing the the Zxcvbn instance will ensure that pattern matchers will only be created once rather than being recreated for each password
+            e=being evaluated.</para>
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Zxcvbn.#ctor">
+            <summary>
+            Create a new instance of Zxcvbn that uses the default matchers.
+            </summary>
+        </member>
+        <member name="M:Zxcvbn.Zxcvbn.#ctor(Zxcvbn.IMatcherFactory)">
+            <summary>
+            Create an instance of Zxcvbn that will use the given matcher factory to create matchers to use
+            to find password weakness.
+            </summary>
+            <param name="matcherFactory">The factory used to create the pattern matchers used</param>
+        </member>
+        <member name="M:Zxcvbn.Zxcvbn.EvaluatePassword(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            <para>Perform the password matching on the given password and user inputs, returing the result structure with information
+            on the lowest entropy match found.</para>
+            
+            <para>User data will be treated as another kind of dictionary matching, but can be different for each password being evaluated.</para>para>
+            </summary>
+            <param name="password">Password</param>
+            <param name="userInputs">Optionally, an enumarable of user data</param>
+            <returns>Result for lowest entropy match</returns>
+        </member>
+        <member name="M:Zxcvbn.Zxcvbn.FindMinimumEntropyMatch(System.String,System.Collections.Generic.IEnumerable{Zxcvbn.Match})">
+            <summary>
+            Returns a new result structure initialised with data for the lowest entropy result of all of the matches passed in, adding brute-force
+            matches where there are no lesser entropy found pattern matches.
+            </summary>
+            <param name="matches">Password being evaluated</param>
+            <param name="password">List of matches found against the password</param>
+            <returns>A result object for the lowest entropy match sequence</returns>
+        </member>
+        <member name="M:Zxcvbn.Zxcvbn.MatchPassword(System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            <para>A static function to match a password against the default matchers without having to create
+            an instance of Zxcvbn yourself, with supplied user data. </para>
+            
+            <para>Supplied user data will be treated as another kind of dictionary matching.</para>
+            </summary>
+            <param name="password">the password to test</param>
+            <param name="userInputs">optionally, the user inputs list</param>
+            <returns>The results of the password evaluation</returns>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miniLockTester", "miniLockTester\miniLockTester.csproj", "{07B1C193-469A-4808-97E2-D445360EF809}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blake2sCSharp", "Blake2sCSharp\Blake2sCSharp.csproj", "{44819913-3577-4774-9742-1AE3BB008CBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "miniLockManaged", "miniLockManaged\miniLockManaged.csproj", "{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AD018BE2-BC0D-48D0-835F-34BD81188041}"
+	ProjectSection(SolutionItems) = preProject
+		CopyRightAndLicenseStatements.txt = CopyRightAndLicenseStatements.txt
+		EncryptedFile.pdf = EncryptedFile.pdf
+		GeneratingAKeyPair.pdf = GeneratingAKeyPair.pdf
+		LoginAndEncryptionFlow.pdf = LoginAndEncryptionFlow.pdf
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07B1C193-469A-4808-97E2-D445360EF809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{07B1C193-469A-4808-97E2-D445360EF809}.Release|Win32.ActiveCfg = Release|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{44819913-3577-4774-9742-1AE3BB008CBA}.Release|Win32.ActiveCfg = Release|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{9449979F-3655-4FFF-BAA3-F7FF1FEB306C}.Release|Win32.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
