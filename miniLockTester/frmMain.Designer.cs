@@ -43,6 +43,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.lblPassphraseSuggestion = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtE
@@ -101,6 +102,7 @@
             // 
             // txtFilename
             // 
+            this.txtFilename.Enabled = false;
             this.txtFilename.Location = new System.Drawing.Point(15, 121);
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.Size = new System.Drawing.Size(569, 23);
@@ -138,6 +140,7 @@
             // 
             // txtRecipients
             // 
+            this.txtRecipients.Enabled = false;
             this.txtRecipients.Location = new System.Drawing.Point(15, 209);
             this.txtRecipients.Multiline = true;
             this.txtRecipients.Name = "txtRecipients";
@@ -173,11 +176,21 @@
             this.label3.TabIndex = 13;
             this.label3.Text = "Passphrase:";
             // 
+            // lblPassphraseSuggestion
+            // 
+            this.lblPassphraseSuggestion.AutoSize = true;
+            this.lblPassphraseSuggestion.Location = new System.Drawing.Point(12, 513);
+            this.lblPassphraseSuggestion.Name = "lblPassphraseSuggestion";
+            this.lblPassphraseSuggestion.Size = new System.Drawing.Size(98, 15);
+            this.lblPassphraseSuggestion.TabIndex = 14;
+            this.lblPassphraseSuggestion.Text = "a b c d e f g";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(739, 522);
+            this.ClientSize = new System.Drawing.Size(739, 536);
+            this.Controls.Add(this.lblPassphraseSuggestion);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -221,6 +234,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblPassphraseSuggestion;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace System
 {
@@ -16,6 +17,28 @@ namespace System
             if (!data.IsValidBase64())
                 throw new InvalidOperationException("Source string is not valid Base64!");
             return Convert.FromBase64String(data);
+        }
+
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        public static void Wipe(this byte[] data)
+        {
+            if (data != null && data.Length > 0)
+            {
+                //Chaos.NaCl.CryptoBytes.Wipe(data);
+                // all this semiphore is required to prevent the compiler from optimizing out the code.
+                Array.Clear(data, 0, data.Length);
+                data[0] &= data[data.GetLowerBound(0)];
+                byte result = 0;
+                int count = 0;
+                foreach (byte b in data)
+                {
+                   result ^= (byte)(b & 0x01);
+                   result >>= 1;
+                   if (count++ > 100)
+                       break; // don't allow bottlenecks.
+                }
+                data[data.GetUpperBound(0)] = result;
+            }
         }
 
         #region Thanks to CodesInChaos for Base58 implementations (originally used for BitCoin addresses);
@@ -82,19 +105,16 @@ namespace System
         #region Regular expression testing from miniLock project and adapted here
         public static bool IsValidBase64(this string data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (string.IsNullOrWhiteSpace(data))
                 return false;
             var base64Match = new System.Text.RegularExpressions.Regex
                 (@"^(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{2}==|[A-Za-z0-9+\/]{3}=)?$");
-            if (base64Match.IsMatch(data))
-                return true;
-            else
-                return false;
+            return base64Match.IsMatch(data);
         }
 
         public static bool IsValidBase58(this string data)
         {
-            if (string.IsNullOrEmpty(data))
+            if (string.IsNullOrWhiteSpace(data))
                 return false;
             var base58Match = new System.Text.RegularExpressions.Regex
                 ("^[1-9ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz]+$");

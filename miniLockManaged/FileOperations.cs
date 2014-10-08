@@ -122,25 +122,56 @@ namespace miniLockManaged
 
             public void Clear()
             {
-                Chaos.NaCl.CryptoBytes.Wipe(this.ciphertextHash);
-                Chaos.NaCl.CryptoBytes.Wipe(this.ephemeralPublicKey);
-                Chaos.NaCl.CryptoBytes.Wipe(this.fileKey);
-                Chaos.NaCl.CryptoBytes.Wipe(this.fileNonce);
-                Chaos.NaCl.CryptoBytes.Wipe(this.recipientID);
-                Chaos.NaCl.CryptoBytes.Wipe(this.senderID);
+                this.ciphertextHash.Wipe();
+                this.ephemeralPublicKey.Wipe();
+                this.fileKey.Wipe();
+                this.fileNonce.Wipe();
+                this.recipientID.Wipe();
+                this.senderID.Wipe();
             }
         }
 
-        public class DecryptedFile // not a struct so that it can be null
+        public class DecryptedFileDetails // not a struct so that it can be null
         {
-            // TODO:  like above, need way to securely destroy object before garbage collection
-            //        less critical than file decryption keys
             //(not part of the spec)
             public string SenderID;
             public string PlainTextBlake2sHash;
             public string StoredFilename;
-            public byte[] Contents;
+            public string ActualDecryptedFilePath; // this is used if the file gets appended with a (1) or (2), etc.
         }
+
+        internal static System.IO.FileStream GetTempFileStream(out string FullPath)
+        {
+            string rndpath = "";
+            do
+            {
+                string guidFilePart = "x" + Guid.NewGuid().ToString("N").Substring(0, 8);
+                rndpath = Path.Combine(
+                    Path.GetTempPath(), guidFilePart);
+            } while (Directory.Exists(rndpath));
+            Directory.CreateDirectory(rndpath);
+            rndpath += "\\";
+            string rndfilename = "x" + Guid.NewGuid().ToString("N").Substring(0, 10) + ".dat";
+            // since the path didn't exist prior to this, the filename didn't either.
+            FullPath = rndpath + rndfilename;
+            return new FileStream(FullPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.Delete, 1024, false);
+        }
+
+        internal static void TrashTempFileStream(System.IO.FileStream fs, string FullPath)
+        {
+            fs.Position = 0;
+            for (int i = 0; i < fs.Length; i++)
+            {
+                fs.WriteByte(0);
+            }
+            fs.Flush();
+            fs.Close();
+            fs.Dispose();
+            // WARNING:  only do this if the path created in GetTempFileStream also creates a random subdir
+            Directory.Delete(new System.IO.FileInfo(FullPath).DirectoryName, true); 
+        }
+
+
 
         //Decryptor (see definition in Decryptor.cs)
 

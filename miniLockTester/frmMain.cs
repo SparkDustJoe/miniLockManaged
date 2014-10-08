@@ -43,6 +43,7 @@ namespace miniLockTester
                 System.IO.File.WriteAllText(txtFilename.Text, miniLockManaged.Utilities.CopyRightAndLicenseStatements());
             }
             txtRecipients.Text = TESTER1_ID + "\r\n" + TESTER2_ID + "\r\n" + TESTER3_ID;
+            lblPassphraseSuggestion.Text = miniLockManaged.Utilities.Generate7WordPassphraseSuggestion();
         }
 
         private void btnENCRYPT_Click(object sender, EventArgs e)
@@ -52,15 +53,10 @@ namespace miniLockTester
             lblID.Text = keyPair.PublicID;
 
             string[] Rs = txtRecipients.Text.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            byte[] theFile = miniLockManaged.FileOperations.EncryptFile(
-                new System.IO.FileInfo(txtFilename.Text), Rs, keyPair);
-            System.IO.FileStream fs = System.IO.File.Create(txtFilename.Text + ".minilock");
-            fs.Write(theFile, 0, theFile.Length);
-            fs.Flush(true);
-            fs.Close();
-            fs.Dispose();
+            long bytesWritten = miniLockManaged.FileOperations.EncryptFile(
+                new System.IO.FileInfo(txtFilename.Text),  System.IO.File.Create(txtFilename.Text + ".minilock"), Rs, keyPair);
             //end encrypt=========================================================================================================== 
-            txtOutput.Text = "ENCRYPTED FILE: " + txtFilename.Text + ".minilock";
+            txtOutput.Text = "ENCRYPTED FILE: " + txtFilename.Text + ".minilock, Bytes written: " + bytesWritten.ToString();
             this.Enabled = true;
         }
 
@@ -68,15 +64,17 @@ namespace miniLockTester
         {
             this.Enabled = false;
              //decrypt=========================================================================================================== 
- 
-            miniLockManaged.FileOperations.DecryptedFile F = miniLockManaged.FileOperations.DecryptFile(
-                new System.IO.FileInfo(txtFilename.Text.Replace(".minilock", "") + ".minilock"), keyPair);
+
+            miniLockManaged.FileOperations.DecryptedFileDetails F = miniLockManaged.FileOperations.DecryptFile(
+                new System.IO.FileStream(txtFilename.Text.Replace(".minilock", "") + ".minilock", System.IO.FileMode.Open),
+                txtFilename.Text, false, keyPair);
             if (F != null)
             {
                 txtOutput.Text = "Encrypted by: " + F.SenderID + "\r\n" +
                     F.StoredFilename + "\r\n" +
-                    "Plaintext Blake2s HASH=" + F.PlainTextBlake2sHash + "\r\n"
-                    + new UTF8Encoding().GetString(F.Contents);
+                    "Plaintext Blake2s HASH=" + F.PlainTextBlake2sHash + "\r\n" +
+                    "Saved as: " + F.ActualDecryptedFilePath + "\r\n" + 
+                    System.IO.File.ReadAllText(F.ActualDecryptedFilePath);
             }
             else
                 txtOutput.Text = "[null]";
@@ -102,6 +100,11 @@ namespace miniLockTester
                     lblID.Text = "Your Public miniLock ID: " + keyPair.PublicID;
                     btnDECRYPT.Enabled = true;
                     btnENCRYPT.Enabled = true;
+                    btnLogIn.Enabled = false;
+                    txtE.Enabled = false;
+                    txtP.Enabled = false;
+                    txtFilename.Enabled = true;
+                    txtRecipients.Enabled = true;
                 }
             }
             this.Enabled = true;
