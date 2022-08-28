@@ -1,5 +1,5 @@
-miniLockManaged
-===============
+miniLockManaged [DEPRICATED: WORKS, BUT DO NOT USE; FOR ARCHIVAL PURPOSES ONLY]
+===================================================================================
 
 A C# port of the JavaScript/Chrome App "miniLock" developed by Nadim Kobeissi
 
